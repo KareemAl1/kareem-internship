@@ -1,10 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 import AuthorBanner from "../images/author_banner.jpg";
 import AuthorItems from "../components/author/AuthorItems";
-import { Link } from "react-router-dom";
-import AuthorImage from "../images/author_thumbnail.jpg";
+import Skeleton from "../components/UI/Skeleton";
 
 const Author = () => {
+  const { id } = useParams();
+  const [author, setAuthor] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [followersCount] = useState(Math.floor(Math.random() * 1000) + 100);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${id}`
+        );
+        setAuthor(response.data);
+      } catch (error) {
+        console.error("Error fetching author:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchAuthor();
+    }
+  }, [id]);
+
+  const copyToClipboard = () => {
+    if (author?.address) {
+      navigator.clipboard.writeText(author.address);
+      alert("Address copied to clipboard!");
+    }
+  };
+
   return (
     <div id="wrapper">
       <div className="no-bottom no-top" id="content">
@@ -25,29 +62,49 @@ const Author = () => {
                 <div className="d_profile de-flex">
                   <div className="de-flex-col">
                     <div className="profile_avatar">
-                      <img src={AuthorImage} alt="" />
-
-                      <i className="fa fa-check"></i>
-                      <div className="profile_name">
-                        <h4>
-                          Monica Lucas
-                          <span className="profile_username">@monicaaaa</span>
-                          <span id="wallet" className="profile_wallet">
-                            UDHUHWudhwd78wdt7edb32uidbwyuidhg7wUHIFUHWewiqdj87dy7
-                          </span>
-                          <button id="btn_copy" title="Copy Text">
-                            Copy
-                          </button>
-                        </h4>
-                      </div>
+                      {loading ? (
+                        <Skeleton width="150px" height="150px" borderRadius="50%" />
+                      ) : (
+                        <>
+                          <img src={author?.authorImage} alt={author?.authorName} />
+                          <i className="fa fa-check"></i>
+                          <div className="profile_name">
+                            <h4>
+                              {author?.authorName}
+                              <span className="profile_username">
+                                @{author?.tag || author?.authorName?.toLowerCase().replace(/\s+/g, '')}
+                              </span>
+                              <span id="wallet" className="profile_wallet">
+                                {author?.address}
+                              </span>
+                              <button 
+                                id="btn_copy" 
+                                title="Copy Text"
+                                onClick={copyToClipboard}
+                              >
+                                Copy
+                              </button>
+                            </h4>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                   <div className="profile_follow de-flex">
                     <div className="de-flex-col">
-                      <div className="profile_follower">573 followers</div>
-                      <Link to="#" className="btn-main">
-                        Follow
-                      </Link>
+                      {loading ? (
+                        <>
+                          <Skeleton width="100px" height="20px" />
+                          <Skeleton width="80px" height="40px" style={{ marginTop: '10px' }} />
+                        </>
+                      ) : (
+                        <>
+                          <div className="profile_follower">{followersCount} followers</div>
+                          <Link to="#" className="btn-main">
+                            Follow
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -55,7 +112,7 @@ const Author = () => {
 
               <div className="col-md-12">
                 <div className="de_tab tab_simple">
-                  <AuthorItems />
+                  <AuthorItems authorId={id} />
                 </div>
               </div>
             </div>
