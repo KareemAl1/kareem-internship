@@ -9,7 +9,8 @@ const Author = () => {
   const { id } = useParams();
   const [author, setAuthor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [followersCount] = useState(Math.floor(Math.random() * 1000) + 100);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -20,9 +21,10 @@ const Author = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${id}`
+          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${id}`,
         );
         setAuthor(response.data);
+        setFollowersCount(response.data.followers || 0);
       } catch (error) {
         console.error("Error fetching author:", error);
       } finally {
@@ -39,6 +41,18 @@ const Author = () => {
     if (author?.address) {
       navigator.clipboard.writeText(author.address);
       alert("Address copied to clipboard!");
+    }
+  };
+
+  const handleFollow = () => {
+    if (isFollowing) {
+      // Unfollow
+      setFollowersCount((prev) => prev - 1);
+      setIsFollowing(false);
+    } else {
+      // Follow
+      setFollowersCount((prev) => prev + 1);
+      setIsFollowing(true);
     }
   };
 
@@ -63,22 +77,33 @@ const Author = () => {
                   <div className="de-flex-col">
                     <div className="profile_avatar">
                       {loading ? (
-                        <Skeleton width="150px" height="150px" borderRadius="50%" />
+                        <Skeleton
+                          width="150px"
+                          height="150px"
+                          borderRadius="50%"
+                        />
                       ) : (
                         <>
-                          <img src={author?.authorImage} alt={author?.authorName} />
+                          <img
+                            src={author?.authorImage}
+                            alt={author?.authorName}
+                          />
                           <i className="fa fa-check"></i>
                           <div className="profile_name">
                             <h4>
                               {author?.authorName}
                               <span className="profile_username">
-                                @{author?.tag || author?.authorName?.toLowerCase().replace(/\s+/g, '')}
+                                @
+                                {author?.tag ||
+                                  author?.authorName
+                                    ?.toLowerCase()
+                                    .replace(/\s+/g, "")}
                               </span>
                               <span id="wallet" className="profile_wallet">
                                 {author?.address}
                               </span>
-                              <button 
-                                id="btn_copy" 
+                              <button
+                                id="btn_copy"
                                 title="Copy Text"
                                 onClick={copyToClipboard}
                               >
@@ -95,14 +120,26 @@ const Author = () => {
                       {loading ? (
                         <>
                           <Skeleton width="100px" height="20px" />
-                          <Skeleton width="80px" height="40px" style={{ marginTop: '10px' }} />
+                          <Skeleton
+                            width="80px"
+                            height="40px"
+                            style={{ marginTop: "10px" }}
+                          />
                         </>
                       ) : (
                         <>
-                          <div className="profile_follower">{followersCount} followers</div>
-                          <Link to="#" className="btn-main">
-                            Follow
-                          </Link>
+                          <div className="profile_follower">
+                            {followersCount} followers
+                          </div>
+                          <button
+                            onClick={handleFollow}
+                            className="btn-main"
+                            style={{
+                              backgroundColor: isFollowing ? "#888" : "",
+                            }}
+                          >
+                            {isFollowing ? "Unfollow" : "Follow"}
+                          </button>
                         </>
                       )}
                     </div>
