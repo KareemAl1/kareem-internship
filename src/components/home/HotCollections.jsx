@@ -15,15 +15,14 @@ const HotCollections = () => {
   useEffect(() => {
     async function load() {
       try {
-  const res = await fetch(API);
-  const data = await res.json();
-  setCollections(Array.isArray(data) ? data : []);
-} catch {
-  setCollections([]);
-} finally {
-  setTimeout(() => setLoading(false), 300);
-}
-
+        const res = await fetch(API);
+        const data = await res.json();
+        setCollections(Array.isArray(data) ? data : []);
+      } catch {
+        setCollections([]);
+      } finally {
+        setTimeout(() => setLoading(false), 300);
+      }
     }
     load();
   }, []);
@@ -61,10 +60,7 @@ const HotCollections = () => {
             <div className="col-lg-12">
               <div className="row">
                 {[...Array(4)].map((_, i) => (
-                  <div
-                    className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
-                    key={i}
-                  >
+                  <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={i}>
                     <div className="nft_coll skeleton-card skeleton-shimmer">
                       <div className="skeleton-img"></div>
                       <div className="skeleton-body">
@@ -95,8 +91,6 @@ const HotCollections = () => {
                     >
                       <div className="nft_wrap">
                         <Link to={`/item-details/${item.nftId}`}>
-
-
                           <img
                             src={cover}
                             className="lazy img-fluid"
@@ -106,7 +100,7 @@ const HotCollections = () => {
                       </div>
 
                       <div className="nft_coll_pp">
-                        <Link to="/author">
+                        <Link to={`/author/${item.authorId}`}>
                           <img
                             className="lazy pp-coll"
                             src={avatar}
