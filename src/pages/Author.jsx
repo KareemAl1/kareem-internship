@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import AuthorBanner from "../images/author_banner.jpg";
 import AuthorItems from "../components/author/AuthorItems";
@@ -46,11 +46,9 @@ const Author = () => {
 
   const handleFollow = () => {
     if (isFollowing) {
-      // Unfollow
       setFollowersCount((prev) => prev - 1);
       setIsFollowing(false);
     } else {
-      // Follow
       setFollowersCount((prev) => prev + 1);
       setIsFollowing(true);
     }
@@ -73,7 +71,7 @@ const Author = () => {
           <div className="container">
             <div className="row">
               <div className="col-md-12">
-                <div className="d_profile de-flex">
+                <div className="d_profile de-flex" data-aos="fade-down">
                   <div className="de-flex-col">
                     <div className="profile_avatar">
                       {loading ? (
@@ -148,7 +146,7 @@ const Author = () => {
               </div>
 
               <div className="col-md-12">
-                <div className="de_tab tab_simple">
+                <div className="de_tab tab_simple" data-aos="fade-up">
                   <AuthorItems authorId={id} />
                 </div>
               </div>

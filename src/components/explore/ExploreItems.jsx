@@ -17,7 +17,7 @@ const ExploreItems = () => {
           `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore${filterParam}`
         );
         setItems(response.data);
-        setVisibleItems(8); // Reset visible items when filter changes
+        setVisibleItems(8);
       } catch (error) {
         console.error("Error fetching items:", error);
       } finally {
@@ -101,11 +101,13 @@ const ExploreItems = () => {
           <option value="likes_high_to_low">Most liked</option>
         </select>
       </div>
-      {items.slice(0, visibleItems).map((item) => (
+      {items.slice(0, visibleItems).map((item, index) => (
         <div
           key={item.id}
           className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
           style={{ display: "block", backgroundSize: "cover" }}
+          data-aos="fade-up"
+          data-aos-delay={index % 4 * 100}
         >
           <div className="nft__item">
             <div className="author_list_pp">
