@@ -88,6 +88,7 @@ const HotCollections = () => {
                     <div
                       className="nft_coll"
                       key={item.id || item._id || index}
+                      data-aos="fade-up"
                     >
                       <div className="nft_wrap">
                         <Link to={`/item-details/${item.nftId}`}>

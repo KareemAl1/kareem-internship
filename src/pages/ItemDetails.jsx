@@ -33,7 +33,6 @@ const ItemDetails = () => {
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;
   if (!item) return <div style={{ padding: 40 }}>Not found</div>;
 
-  // Fallbacks in case any fields are missing
   const title = item.title || "Untitled";
   const tag = item.tag || "";
   const nftImage = item.nftImage || "";
