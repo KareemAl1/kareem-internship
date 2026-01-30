@@ -147,7 +147,7 @@ const Author = () => {
 
               <div className="col-md-12">
                 <div className="de_tab tab_simple" data-aos="fade-up">
-                  <AuthorItems authorId={id} />
+                  <AuthorItems authorId={id} authorImage={author?.authorImage} />
                 </div>
               </div>
             </div>

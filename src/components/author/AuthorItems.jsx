@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Skeleton from "../UI/Skeleton";
 
-const AuthorItems = ({ authorId }) => {
+const AuthorItems = ({ authorId, authorImage }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,12 +43,17 @@ const AuthorItems = ({ authorId }) => {
 
   return (
     <div className="row">
-      {items.map((item) => (
-        <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={item.id}>
+      {items.map((item, index) => (
+        <div 
+          className="col-lg-3 col-md-6 col-sm-6 col-xs-12" 
+          key={item.id}
+          data-aos="fade-up"
+          data-aos-delay={index % 4 * 100}
+        >
           <div className="nft__item">
             <div className="author_list_pp">
               <Link to={`/author/${authorId}`}>
-                <img className="lazy" src={item.authorImage} alt="" />
+                <img className="lazy" src={authorImage} alt="" />
                 <i className="fa fa-check"></i>
               </Link>
             </div>
