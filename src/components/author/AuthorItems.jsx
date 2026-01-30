@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Skeleton from "../UI/Skeleton";
 
-const AuthorItems = ({ authorId }) => {
+const AuthorItems = ({ authorId, authorImage, loading: parentLoading }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +13,8 @@ const AuthorItems = ({ authorId }) => {
         const response = await axios.get(
           `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`
         );
+        // Add a small delay to make loading state visible
+        await new Promise(resolve => setTimeout(resolve, 500));
         setItems(response.data.nftCollection || []);
       } catch (error) {
         console.error("Error fetching author items:", error);
@@ -27,13 +28,18 @@ const AuthorItems = ({ authorId }) => {
     }
   }, [authorId]);
 
-  if (loading) {
+  if (loading || parentLoading) {
     return (
       <div className="row">
         {new Array(8).fill(0).map((_, index) => (
           <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
-            <div className="nft__item">
-              <Skeleton width="100%" height="400px" borderRadius="8px" />
+            <div className="nft__item skeleton-card skeleton-shimmer">
+              <div className="skeleton-img" style={{ height: "250px" }}></div>
+              <div className="skeleton-body">
+                <div className="skeleton-avatar"></div>
+                <div className="skeleton-line title"></div>
+                <div className="skeleton-line sub"></div>
+              </div>
             </div>
           </div>
         ))}
@@ -43,12 +49,17 @@ const AuthorItems = ({ authorId }) => {
 
   return (
     <div className="row">
-      {items.map((item) => (
-        <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={item.id}>
+      {items.map((item, index) => (
+        <div 
+          className="col-lg-3 col-md-6 col-sm-6 col-xs-12" 
+          key={item.id}
+          data-aos="fade-up"
+          data-aos-delay={index % 4 * 100}
+        >
           <div className="nft__item">
             <div className="author_list_pp">
               <Link to={`/author/${authorId}`}>
-                <img className="lazy" src={item.authorImage} alt="" />
+                <img className="lazy" src={authorImage} alt="" />
                 <i className="fa fa-check"></i>
               </Link>
             </div>

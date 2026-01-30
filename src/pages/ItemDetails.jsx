@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import EthImage from "../images/ethereum.svg";
 import { Link, useParams } from "react-router-dom";
+import Skeleton from "../components/UI/Skeleton";
 
 const API =
   "https://us-central1-nft-cloud-functions.cloudfunctions.net/itemDetails";
@@ -30,7 +31,36 @@ const ItemDetails = () => {
     load();
   }, [id]);
 
-  if (loading) return <div style={{ padding: 40 }}>Loading...</div>;
+  if (loading) {
+    return (
+      <div id="wrapper">
+        <div className="no-bottom no-top" id="content">
+          <div id="top"></div>
+          <section aria-label="section" className="mt90 sm-mt-0">
+            <div className="container">
+              <div className="row">
+                <div className="col-md-6 text-center">
+                  <Skeleton width="100%" height="400px" borderRadius="8px" />
+                </div>
+                <div className="col-md-6">
+                  <div className="item_info">
+                    <Skeleton width="300px" height="40px" style={{ marginBottom: "20px" }} />
+                    <Skeleton width="150px" height="20px" style={{ marginBottom: "20px" }} />
+                    <Skeleton width="100%" height="80px" style={{ marginBottom: "20px" }} />
+                    <Skeleton width="200px" height="30px" style={{ marginBottom: "10px" }} />
+                    <Skeleton width="100%" height="60px" style={{ marginBottom: "20px" }} />
+                    <Skeleton width="200px" height="30px" style={{ marginBottom: "10px" }} />
+                    <Skeleton width="100%" height="60px" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
+
   if (!item) return <div style={{ padding: 40 }}>Not found</div>;
 
   const title = item.title || "Untitled";
