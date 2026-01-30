@@ -23,6 +23,8 @@ const Author = () => {
         const response = await axios.get(
           `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${id}`,
         );
+        // Add a small delay to make loading state visible
+        await new Promise(resolve => setTimeout(resolve, 500));
         setAuthor(response.data);
         setFollowersCount(response.data.followers || 0);
       } catch (error) {
@@ -147,7 +149,7 @@ const Author = () => {
 
               <div className="col-md-12">
                 <div className="de_tab tab_simple" data-aos="fade-up">
-                  <AuthorItems authorId={id} authorImage={author?.authorImage} />
+                  <AuthorItems authorId={id} authorImage={author?.authorImage} loading={loading} />
                 </div>
               </div>
             </div>
